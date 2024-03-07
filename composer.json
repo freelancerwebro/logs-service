@@ -14,8 +14,6 @@
         "symfony/runtime": "7.0.*",
         "symfony/yaml": "7.0.*"
     },
-    "require-dev": {
-    },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true,
@@ -54,7 +52,13 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "phpstan": "vendor/bin/phpstan analyse --memory-limit=4G -c phpstan.neon",
+        "phpmd": "vendor/bin/phpmd src,tests ansi phpmd.xml",
+        "cs-check": "vendor/bin/php-cs-fixer fix --dry-run --show-progress=none -v",
+        "cs-fix": "vendor/bin/php-cs-fixer fix --show-progress=none",
+        "cs": ["@cs-fix", "@phpstan", "@phpmd"],
+        "test": "vendor/bin/phpunit"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -64,5 +68,14 @@
             "allow-contrib": false,
             "require": "7.0.*"
         }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.51",
+        "phpmd/phpmd": "^2.15",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "7.0.*",
+        "symfony/css-selector": "7.0.*",
+        "symfony/phpunit-bridge": "^7.0"
     }
 }
