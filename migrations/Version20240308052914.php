@@ -11,12 +11,12 @@ final class Version20240308052914 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Create table log_line';
+        return 'Create table log';
     }
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE `log_line` (
+        $this->addSql('CREATE TABLE `log` (
             id INT AUTO_INCREMENT NOT NULL, 
             service_name VARCHAR(30) NOT NULL, 
             method VARCHAR(10) NOT NULL, 
@@ -29,6 +29,6 @@ final class Version20240308052914 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql('DROP TABLE `log_line`');
+        $this->addSql('DROP TABLE `log`');
     }
 }

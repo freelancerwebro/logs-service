@@ -66,3 +66,5 @@ phpstan.neon
 ###< friendsofphp/php-cs-fixer ###
 
 mysql
+
+0
