@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\LogLineRepository;
+use App\Repository\LogRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: LogLineRepository::class)]
-#[ORM\Table(name: '`log_line`')]
-class LogLine
+#[ORM\Entity(repositoryClass: LogRepository::class)]
+#[ORM\Table(name: '`log`')]
+class Log
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

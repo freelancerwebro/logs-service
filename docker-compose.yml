@@ -3,7 +3,9 @@ version: '3.8'
 services:
   nginx:
     container_name: nginx
-    image: nginx:stable-alpine
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
     ports:
       - '8088:80'
     volumes:
