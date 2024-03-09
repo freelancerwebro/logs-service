@@ -15,8 +15,10 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Log[]    findAll()
  * @method Log[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class LogRepository extends ServiceEntityRepository
+class LogRepository extends ServiceEntityRepository implements LogRepositoryInterface
 {
+    private const CACHE_LIFETIME = 3600;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Log::class);
@@ -57,7 +59,7 @@ class LogRepository extends ServiceEntityRepository
         $result = $qb
             ->getQuery()
             ->useQueryCache(true)
-            ->setQueryCacheLifetime(3600)
+            ->setQueryCacheLifetime(self::CACHE_LIFETIME)
             ->getSingleScalarResult();
 
         return (int) $result;
@@ -69,5 +71,11 @@ class LogRepository extends ServiceEntityRepository
         $qb->delete();
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function save(Log $log): void
+    {
+        $this->getEntityManager()->persist($log);
+        $this->getEntityManager()->flush();
     }
 }
