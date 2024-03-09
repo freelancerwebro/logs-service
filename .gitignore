@@ -68,3 +68,6 @@ phpstan.neon
 mysql
 
 0
+###> friends-of-behat/symfony-extension ###
+/behat.yml
+###< friends-of-behat/symfony-extension ###

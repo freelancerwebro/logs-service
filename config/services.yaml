@@ -26,3 +26,16 @@ services:
     App\EventListener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    App\Library\LogParser\ServiceLogParser:
+        arguments:
+            $pattern: '/(?<serviceName>\S+)\s+-\s+-\s+\[(?<date>.+)\]\s+"(?<method>\S+)\s+(?<endpoint>\S+)\s+(?<http>[0-9A-Z\/.]+)"\s+(?<statusCode>\d+)/'
+
+    App\Library\LogParser\ServiceLogIterator:
+        arguments:
+            $logFile: 'public/logs.log'
+            $parser: '@App\Library\LogParser\ServiceLogParser'
+
+    App\Service\SaveLogService:
+        arguments:
+            $logIterator: '@App\Library\LogParser\ServiceLogIterator'
