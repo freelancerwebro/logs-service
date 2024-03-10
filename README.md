@@ -7,12 +7,12 @@ The purpose of the service is to save a remote log file into the local database.
 - docker-compose
 
 ## Installation
-Clone git repository:
+Clone the git repository:
 ```
 git clone git@github.com:freelancerwebro/logs-service.git
 ```
 
-In order to build the service, run the following command:
+In order to build the service, run the command:
 ```
 ./deploy.sh
 ```
