@@ -14,7 +14,7 @@ git clone git@github.com:freelancerwebro/logs-service.git
 
 Run deploy:
 ```
-docker-compose up -d
+./deploy.sh
 ```
 
 Run code analysis:
