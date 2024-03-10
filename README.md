@@ -5,7 +5,6 @@ The purpose of the service is to save a remote log file into the local database.
 ## Requirements
 - git
 - docker-compose
-- composer
 
 ## Installation
 Clone git repository:
