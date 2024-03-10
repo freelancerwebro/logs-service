@@ -21,11 +21,11 @@ class LogControllerTest extends WebTestCase
         $response = $client->getResponse();
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertJson($response->getContent());
+        $this->assertJson((string) $response->getContent());
 
         $this->assertJsonStringEqualsJsonString(
             '{"counter":3}',
-            $response->getContent()
+            (string) $response->getContent()
         );
     }
 
@@ -34,16 +34,16 @@ class LogControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             self::COUNT_METHOD,
-            self::COUNT_ENDPOINT . '?statusCode=200&serviceNames[]=AUTH-SERVICE&serviceNames[]=INVOICE-SERVICE&startDate=2024-02-01 00:00:00&endDate=2024-03-09 23:59:59'
+            self::COUNT_ENDPOINT.'?statusCode=200&serviceNames[]=AUTH-SERVICE&serviceNames[]=INVOICE-SERVICE&startDate=2024-02-01 00:00:00&endDate=2024-03-09 23:59:59'
         );
         $response = $client->getResponse();
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertJson($response->getContent());
+        $this->assertJson((string) $response->getContent());
 
         $this->assertJsonStringEqualsJsonString(
             '{"counter":2}',
-            $response->getContent()
+            (string) $response->getContent()
         );
     }
 
@@ -66,7 +66,7 @@ class LogControllerTest extends WebTestCase
 
         $this->assertJsonStringEqualsJsonString(
             '{"counter":0}',
-            $response->getContent()
+            (string) $response->getContent()
         );
     }
 
@@ -75,15 +75,15 @@ class LogControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             self::COUNT_METHOD,
-            self::COUNT_ENDPOINT . '?statusCode=213123123123'
+            self::COUNT_ENDPOINT.'?statusCode=213123123123'
         );
         $response = $client->getResponse();
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertJson($response->getContent());
+        $this->assertJson((string) $response->getContent());
         $this->assertJsonStringEqualsJsonString(
             '{"error":"StatusCode is not a valid HTTP code"}',
-            $response->getContent()
+            (string) $response->getContent()
         );
     }
 
@@ -92,15 +92,15 @@ class LogControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             self::COUNT_METHOD,
-            self::COUNT_ENDPOINT . '?serviceNames[]=wrong1'
+            self::COUNT_ENDPOINT.'?serviceNames[]=wrong1'
         );
         $response = $client->getResponse();
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertJson($response->getContent());
+        $this->assertJson((string) $response->getContent());
         $this->assertJsonStringEqualsJsonString(
             '{"error":"ServiceName is invalid"}',
-            $response->getContent()
+            (string) $response->getContent()
         );
     }
 
@@ -109,15 +109,15 @@ class LogControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             self::COUNT_METHOD,
-            self::COUNT_ENDPOINT . '?startDate=wrongDate'
+            self::COUNT_ENDPOINT.'?startDate=wrongDate'
         );
         $response = $client->getResponse();
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertJson($response->getContent());
+        $this->assertJson((string) $response->getContent());
         $this->assertJsonStringEqualsJsonString(
             '{"error":"StartDate is not a valid datetime"}',
-            $response->getContent()
+            (string) $response->getContent()
         );
     }
 
@@ -126,15 +126,15 @@ class LogControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             self::COUNT_METHOD,
-            self::COUNT_ENDPOINT . '?endDate=wrongDate'
+            self::COUNT_ENDPOINT.'?endDate=wrongDate'
         );
         $response = $client->getResponse();
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertJson($response->getContent());
+        $this->assertJson((string) $response->getContent());
         $this->assertJsonStringEqualsJsonString(
             '{"error":"EndDate is not a valid datetime"}',
-            $response->getContent()
+            (string) $response->getContent()
         );
     }
 }

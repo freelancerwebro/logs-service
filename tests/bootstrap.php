@@ -17,8 +17,8 @@ if (isset($_ENV['BOOTSTRAP_CLEAR_CACHE_ENV'])) {
     ));
 }
 
-if (isset($_ENV['BOOTSTRAP_RESET_DATABASE']) && $_ENV['BOOTSTRAP_RESET_DATABASE'] == true) {
-    echo "Resetting test database...";
+if (isset($_ENV['BOOTSTRAP_RESET_DATABASE']) && true == $_ENV['BOOTSTRAP_RESET_DATABASE']) {
+    echo 'Resetting test database...';
     passthru(sprintf(
         'php "%s/../bin/console" doctrine:schema:drop --env=test --force --no-interaction',
         __DIR__
@@ -31,7 +31,7 @@ if (isset($_ENV['BOOTSTRAP_RESET_DATABASE']) && $_ENV['BOOTSTRAP_RESET_DATABASE'
         'php "%s/../bin/console" doctrine:fixtures:load --env=test --no-interaction',
         __DIR__
     ));
-    echo " Done" . PHP_EOL . PHP_EOL;
+    echo ' Done'.PHP_EOL.PHP_EOL;
 }
 
 if ($_SERVER['APP_DEBUG']) {
