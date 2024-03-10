@@ -1,5 +1,5 @@
 # Logs Service
-Implementation of a Logs Service with PHP 8.2, Symfony 7 and MySQL.
+Implementation of a Logs Service with PHP 8.2, Symfony 7 and MySQL 8.
 
 ## Requirements
 - git
