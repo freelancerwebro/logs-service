@@ -29,7 +29,7 @@ services:
 
     App\Library\LogParser\ServiceLogParser:
         arguments:
-            $pattern: '/(?<serviceName>\S+)\s+-\s+-\s+\[(?<date>.+)\]\s+"(?<method>\S+)\s+(?<endpoint>\S+)\s+(?<http>[0-9A-Z\/.]+)"\s+(?<statusCode>\d+)/'
+            $pattern: '/(?<serviceName>\S+)\s+-\s+-\s+\[(?<created>.+)\]\s+"(?<method>\S+)\s+(?<endpoint>\S+)\s+(?<http>[0-9A-Z\/.]+)"\s+(?<statusCode>\d+)/'
 
     App\Library\LogParser\ServiceLogIterator:
         arguments:
