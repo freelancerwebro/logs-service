@@ -29,7 +29,7 @@ composer test
 
 API usage:
 ```
-- GET `/log/count`: Upload a CSV file
+- GET `/log/count`: Fetch information about the log counter
 - DELETE `/log`: Truncates the log database
 ```
 
