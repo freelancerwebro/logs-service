@@ -38,7 +38,7 @@ final readonly class SaveLogService implements SaveLogServiceInterface
         $log->setMethod($data['method']);
         $log->setEndpoint($data['endpoint']);
         $log->setStatusCode((int) $data['statusCode']);
-        $log->setCreated(new \DateTimeImmutable($data['date']));
+        $log->setCreated(new \DateTimeImmutable($data['created']));
 
         return $log;
     }
