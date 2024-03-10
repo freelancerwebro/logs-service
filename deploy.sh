@@ -1,3 +1,6 @@
+echo 'Prepare config files:'
+cp phpunit.xml.dist phpunit.xml
+
 docker-compose up -d
 
 echo 'Creating database:'
