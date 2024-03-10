@@ -30,7 +30,7 @@ composer test
 API usage:
 ```
 - GET `/count`: Fetch information about the log counter
-- DELETE `/delete`: Truncates the log database
+- DELETE `/delete`: Truncate the log database
 ```
 
 Save logs into the database:
