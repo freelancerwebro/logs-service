@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Application\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class LogControllerTest extends WebTestCase
 {
@@ -19,7 +20,7 @@ class LogControllerTest extends WebTestCase
         $client->request(self::COUNT_METHOD, self::COUNT_ENDPOINT);
         $response = $client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertJson($response->getContent());
 
         $this->assertJsonStringEqualsJsonString(
@@ -37,7 +38,7 @@ class LogControllerTest extends WebTestCase
         );
         $response = $client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertJson($response->getContent());
 
         $this->assertJsonStringEqualsJsonString(
@@ -49,12 +50,18 @@ class LogControllerTest extends WebTestCase
     public function testDeleteSuccess(): void
     {
         $client = static::createClient();
-        $client->request(self::TRUNCATE_METHOD, self::TRUNCATE_ENDPOINT);
+        $client->request(
+            self::TRUNCATE_METHOD,
+            self::TRUNCATE_ENDPOINT
+        );
         $response = $client->getResponse();
 
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
 
-        $client->request('GET', '/log/count');
+        $client->request(
+            self::COUNT_METHOD,
+            self::COUNT_ENDPOINT
+        );
         $response = $client->getResponse();
 
         $this->assertJsonStringEqualsJsonString(
@@ -72,7 +79,7 @@ class LogControllerTest extends WebTestCase
         );
         $response = $client->getResponse();
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
         $this->assertJson($response->getContent());
         $this->assertJsonStringEqualsJsonString(
             '{"error":"StatusCode is not a valid HTTP code"}',
@@ -89,7 +96,7 @@ class LogControllerTest extends WebTestCase
         );
         $response = $client->getResponse();
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
         $this->assertJson($response->getContent());
         $this->assertJsonStringEqualsJsonString(
             '{"error":"ServiceName is invalid"}',
@@ -106,7 +113,7 @@ class LogControllerTest extends WebTestCase
         );
         $response = $client->getResponse();
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
         $this->assertJson($response->getContent());
         $this->assertJsonStringEqualsJsonString(
             '{"error":"StartDate is not a valid datetime"}',
@@ -123,7 +130,7 @@ class LogControllerTest extends WebTestCase
         );
         $response = $client->getResponse();
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
         $this->assertJson($response->getContent());
         $this->assertJsonStringEqualsJsonString(
             '{"error":"EndDate is not a valid datetime"}',
