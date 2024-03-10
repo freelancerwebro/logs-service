@@ -1,5 +1,6 @@
 # Logs Service
-Implementation of a Logs Service with PHP 8.2, Symfony 7 and MySQL 8.
+Implementation of a Logs Service with PHP 8.2, Symfony 7 and MySQL 8. 
+The purpose of the service is to save a remote log file into the local database.
 
 ## Requirements
 - git
@@ -12,7 +13,7 @@ Clone git repository:
 git clone git@github.com:freelancerwebro/logs-service.git
 ```
 
-Run deploy:
+In order to build the service, run the following command:
 ```
 ./deploy.sh
 ```

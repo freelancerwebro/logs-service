@@ -1,6 +1,8 @@
 {
+    "name": "freelancerwebro/logs-service",
     "type": "project",
-    "license": "proprietary",
+    "description": "Logs Service built with Symfony 7",
+    "keywords": ["symfony", "php", "mysql"],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
