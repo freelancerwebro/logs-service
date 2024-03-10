@@ -23,7 +23,7 @@ final class SaveLogsCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('filepath', InputArgument::OPTIONAL, 'The path of the log file');
+        $this->addArgument('logFile', InputArgument::OPTIONAL, 'The path of the log file');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
