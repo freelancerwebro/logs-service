@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Log;
+use App\Factory\LogFactoryInterface;
 use App\Library\LogParser\Exception\ServiceLogException;
 use App\Repository\LogRepositoryInterface;
 use MVar\LogParser\LogIterator;
+use Throwable;
 
+/**
+ * @phpstan-import-type LogArray from LogFactoryInterface
+ */
 final readonly class SaveLogService implements SaveLogServiceInterface
 {
     public function __construct(
         private LogIterator $logIterator,
         private LogRepositoryInterface $logRepository,
+        private LogFactoryInterface $logFactory,
     ) {
     }
 
@@ -23,28 +28,17 @@ final readonly class SaveLogService implements SaveLogServiceInterface
     public function save(): void
     {
         try {
+            /**
+             * @var LogArray $data
+             */
             foreach ($this->logIterator as $data) {
+                $entity = $this->logFactory->create($data);
                 $this->logRepository->save(
-                    $this->prepareLogEntity($data)
+                    $entity
                 );
             }
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new ServiceLogException($exception->getMessage());
         }
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function prepareLogEntity(array $data): Log
-    {
-        $log = new Log();
-        $log->setServiceName($data['serviceName']);
-        $log->setMethod($data['method']);
-        $log->setEndpoint($data['endpoint']);
-        $log->setStatusCode((int) $data['statusCode']);
-        $log->setCreated(new \DateTimeImmutable($data['created']));
-
-        return $log;
     }
 }
