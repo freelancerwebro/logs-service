@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Log;
+use App\Library\LogParser\Exception\ServiceLogException;
 use App\Repository\LogRepositoryInterface;
 use MVar\LogParser\LogIterator;
 
@@ -17,14 +18,18 @@ final readonly class SaveLogService implements SaveLogServiceInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws ServiceLogException
      */
     public function save(): void
     {
-        foreach ($this->logIterator as $data) {
-            $this->logRepository->save(
-                $this->prepareLogEntity($data)
-            );
+        try {
+            foreach ($this->logIterator as $data) {
+                $this->logRepository->save(
+                    $this->prepareLogEntity($data)
+                );
+            }
+        } catch (\Throwable $exception) {
+            throw new ServiceLogException($exception->getMessage());
         }
     }
 
