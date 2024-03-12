@@ -73,5 +73,3 @@ mysql
 ###< friends-of-behat/symfony-extension ###
 
 var/test.db
-
-.env.test.local
