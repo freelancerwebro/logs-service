@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Factory\LogFactoryInterface;
-use App\Library\LogParser\Exception\ServiceLogException;
+use App\Library\LogParser\Exception\ParserException;
+use App\Library\LogParser\LineParserInterface;
+use App\Library\LogParser\LogIteratorInterface;
 use App\Repository\LogRepositoryInterface;
-use MVar\LogParser\LogIterator;
-use Throwable;
+use App\Service\Exception\LineInvalidServiceException;
 
 /**
  * @phpstan-import-type LogArray from LogFactoryInterface
@@ -16,29 +17,37 @@ use Throwable;
 final readonly class SaveLogService implements SaveLogServiceInterface
 {
     public function __construct(
-        private LogIterator $logIterator,
         private LogRepositoryInterface $logRepository,
         private LogFactoryInterface $logFactory,
+        private LineParserInterface $parser,
+        private LogIteratorInterface $logIterator
     ) {
     }
 
     /**
-     * @throws ServiceLogException
+     * @throws LineInvalidServiceException
+     * @throws ParserException
      */
     public function save(): void
     {
-        try {
-            /**
-             * @var LogArray $data
-             */
-            foreach ($this->logIterator as $data) {
-                $entity = $this->logFactory->create($data);
-                $this->logRepository->save(
-                    $entity
-                );
+        foreach ($this->logIterator->getLines() as $line) {
+            if (!is_string($line)) {
+                throw new LineInvalidServiceException();
             }
-        } catch (Throwable $exception) {
-            throw new ServiceLogException($exception->getMessage());
+
+            $this->saveOneLine($line);
         }
+    }
+
+    private function saveOneLine(string $line): void
+    {
+        $lineArray = $this->parser->parseLine($line);
+
+        /**
+         * @var LogArray $lineArray
+         */
+        $entity = $this->logFactory->create($lineArray);
+
+        $this->logRepository->save($entity);
     }
 }
