@@ -27,15 +27,15 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
-    App\Library\LogParser\ServiceLogParser:
+    App\Library\LogParser\Parser:
         arguments:
             $pattern: '/(?<serviceName>\S+)\s+-\s+-\s+\[(?<created>.+)\]\s+"(?<method>\S+)\s+(?<endpoint>\S+)\s+(?<http>[0-9A-Z\/.]+)"\s+(?<statusCode>\d+)/'
 
-    App\Library\LogParser\ServiceLogIterator:
+    App\Library\LogParser\LogIterator:
         arguments:
-            $logFile: 'public/logs.log'
-            $parser: '@App\Library\LogParser\ServiceLogParser'
+            $logFile: 'https://raw.githubusercontent.com/freelancerwebro/logs-service/main/public/logs.log'
 
     App\Service\SaveLogService:
         arguments:
-            $logIterator: '@App\Library\LogParser\ServiceLogIterator'
+            $logIterator: '@App\Library\LogParser\LogIterator'
+            $parser: '@App\Library\LogParser\Parser'

@@ -6,6 +6,6 @@ namespace App\Library\LogParser\Exception;
 
 use Exception;
 
-final class ServiceLogException extends Exception
+class PatternMatchException extends Exception
 {
 }
