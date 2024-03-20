@@ -33,8 +33,7 @@ API usage:
 - DELETE `/delete`: Truncate the log database
 ```
 
-Save logs into the database:
-For importing logs the following command has to be run in the PHP container:
+In order to import the logs the following command has to be run in the PHP container:
 ```
 php bin/console app:save-logs
 ```
