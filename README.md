@@ -1,5 +1,5 @@
 # Logs Service
-Implementation of a Logs Service with PHP 8.2, Symfony 7 and MySQL 8. 
+Implementation of a Logs Service with PHP 8.3, Symfony 7 and MySQL 8. 
 The purpose of the service is to save a remote log file into the local database.
 
 ## Requirements
