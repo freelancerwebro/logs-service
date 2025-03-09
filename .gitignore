@@ -73,3 +73,10 @@ mysql
 ###< friends-of-behat/symfony-extension ###
 
 var/test.db
+
+.env
+.env.local
+.env.test
+/.idea
+/undeploy.sh
+/swagger.json
