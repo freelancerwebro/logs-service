@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class LogController extends AbstractController
 {
-    #[Route('/count', name: 'app_log_count', methods: ['GET'])]
+    #[Route('/logs/count', name: 'app_log_count', methods: ['GET'])]
     public function count(
         #[MapQueryString] ?LogRequestDto $logRequestDto,
         LogRepository $logRepository,
@@ -22,7 +22,7 @@ final class LogController extends AbstractController
         ]);
     }
 
-    #[Route('/delete', name: 'app_log_delete', methods: ['DELETE'])]
+    #[Route('/logs', name: 'app_log_delete', methods: ['DELETE'])]
     public function truncate(
         LogRepository $logRepository,
     ): JsonResponse {

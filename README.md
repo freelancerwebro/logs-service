@@ -29,8 +29,8 @@ composer test
 
 API usage:
 ```
-- GET `/count`: Fetch information about the log counter
-- DELETE `/delete`: Truncate the log database
+- GET `/logs/count`: Fetch information about the log counter
+- DELETE `/logs`: Delete all logs
 ```
 
 In order to import the logs the following command has to be run in the PHP container:
