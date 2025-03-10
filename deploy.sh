@@ -3,6 +3,7 @@ cp phpunit.xml.dist phpunit.xml
 cp phpstan.dist.neon phpstan.neon
 cp behat.yml.dist behat.yml
 cp .env.example .env
+cp .env.test.example .env.test
 
 echo 'Building containers...'
 docker-compose up -d --build
