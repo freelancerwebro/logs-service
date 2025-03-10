@@ -9,9 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LogControllerTest extends WebTestCase
 {
-    private const COUNT_ENDPOINT = '/count';
+    private const COUNT_ENDPOINT = '/logs/count';
     private const COUNT_METHOD = 'GET';
-    private const TRUNCATE_ENDPOINT = '/delete';
+    private const TRUNCATE_ENDPOINT = '/logs';
     private const TRUNCATE_METHOD = 'DELETE';
 
     public function testCountSuccess(): void
