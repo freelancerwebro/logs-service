@@ -6,7 +6,8 @@ cp .env.example .env
 cp .env.test.example .env.test
 
 echo 'Building containers...'
-docker-compose up -d --build
+docker-compose build --no-cache
+docker-compose up -d
 
 echo 'Installing composer...'
 docker exec -it logs-service-php composer install --prefer-dist --no-progress --no-interaction
