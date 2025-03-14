@@ -34,8 +34,3 @@ services:
     App\Library\LogParser\LogIterator:
         arguments:
             $logFile: 'https://raw.githubusercontent.com/freelancerwebro/logs-service/main/public/logs.log'
-
-    App\Service\SaveLogService:
-        arguments:
-            $logIterator: '@App\Library\LogParser\LogIterator'
-            $parser: '@App\Library\LogParser\Parser'

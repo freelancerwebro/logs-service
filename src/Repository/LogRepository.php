@@ -5,7 +5,10 @@ namespace App\Repository;
 use App\Dto\LogRequestDto;
 use App\Entity\Log;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
+use RuntimeException;
 
 /**
  * @extends ServiceEntityRepository<Log>
@@ -18,10 +21,12 @@ use Doctrine\Persistence\ManagerRegistry;
 class LogRepository extends ServiceEntityRepository implements LogRepositoryInterface
 {
     private const CACHE_LIFETIME = 3600;
+    private Connection $conn;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, Connection $conn)
     {
         parent::__construct($registry, Log::class);
+        $this->conn = $conn;
     }
 
     public function countByCriteria(?LogRequestDto $logRequestDto = null): int
@@ -77,5 +82,19 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
     {
         $this->getEntityManager()->persist($log);
         $this->getEntityManager()->flush();
+    }
+
+    public function flushBulkInsert(array $logBuffer): void
+    {
+        if (empty($logBuffer)) {
+            return;
+        }
+
+        try {
+            $sql = "INSERT INTO log (service_name, method, endpoint, status_code, created) VALUES " . implode(", ", $logBuffer);
+            $this->conn->executeStatement($sql);
+        } catch (Exception $e) {
+            throw new RuntimeException('Failed to insert logs: ' . $e->getMessage());
+        }
     }
 }

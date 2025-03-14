@@ -14,4 +14,6 @@ interface LogRepositoryInterface
     public function deleteAll(): int;
 
     public function save(Log $log): void;
+
+    public function flushBulkInsert(array $logBuffer): void;
 }
