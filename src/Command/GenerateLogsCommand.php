@@ -16,7 +16,7 @@ use Throwable;
 #[When('dev')]
 #[AsCommand(
     name: 'app:generate-logs',
-    description: 'This is a test command to be used in DEV only. This purpose is to generate aggregated logs.',
+    description: 'The command helps to generate random aggregated logs. To be used for testing purposes.'
 )]
 class GenerateLogsCommand extends Command
 {
