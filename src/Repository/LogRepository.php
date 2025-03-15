@@ -6,6 +6,7 @@ use App\Dto\LogRequestDto;
 use App\Entity\Log;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use RuntimeException;
@@ -96,5 +97,29 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
         } catch (Exception $e) {
             throw new RuntimeException('Failed to insert logs: ' . $e->getMessage());
         }
+    }
+
+    public function getPaginatedLogs(int $page, int $limit): array
+    {
+        $query = $this->createQueryBuilder('l')
+            ->orderBy('l.created', 'DESC')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->getQuery();
+
+        $paginator = new Paginator($query);
+        $totalLogs = count($paginator);
+
+        return [
+            'total' => $totalLogs,
+            'data' => array_map(fn ($log) => [
+                'id' => $log->getId(),
+                'service_name' => $log->getServiceName(),
+                'method' => $log->getMethod(),
+                'endpoint' => $log->getEndpoint(),
+                'status_code' => $log->getStatusCode(),
+                'created' => $log->getCreated()->format('Y-m-d H:i:s'),
+            ], $paginator->getIterator()->getArrayCopy()),
+        ];
     }
 }
