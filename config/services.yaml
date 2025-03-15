@@ -30,7 +30,3 @@ services:
     App\Library\LogParser\Parser:
         arguments:
             $pattern: '/(?<serviceName>\S+)\s+-\s+-\s+\[(?<created>.+)\]\s+"(?<method>\S+)\s+(?<endpoint>\S+)\s+(?<http>[0-9A-Z\/.]+)"\s+(?<statusCode>\d+)/'
-
-    App\Library\LogParser\LogIterator:
-        arguments:
-            $logFile: 'https://raw.githubusercontent.com/freelancerwebro/logs-service/main/public/logs.log'
