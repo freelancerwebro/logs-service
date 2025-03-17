@@ -25,6 +25,9 @@ RUN apt-get update && apt-get install -y \
     gd \
     && apt-get clean
 
+# Install Redis extension
+RUN pecl install redis && docker-php-ext-enable redis
+
 # Install Symfony CLI properly (alternative method)
 RUN curl -sS https://get.symfony.com/cli/installer | bash && \
     mv /root/.symfony5/bin/symfony /usr/local/bin/symfony

@@ -44,6 +44,15 @@ services:
     networks:
       - symfony
 
+  redis:
+    container_name: logs-service-redis
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - '6380:6379'
+    networks:
+      - symfony
+
   swagger-ui:
     container_name: logs-service-swagger-ui
     image: swaggerapi/swagger-ui
