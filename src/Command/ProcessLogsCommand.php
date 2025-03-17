@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\LogProcessorService;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,7 +20,8 @@ use Throwable;
 final class ProcessLogsCommand extends Command
 {
     public function __construct(
-        private readonly LogProcessorService $logProcessorService
+        private readonly LogProcessorService $logProcessorService,
+        private readonly CacheItemPoolInterface $cache
     ) {
         parent::__construct();
     }
@@ -40,6 +42,8 @@ final class ProcessLogsCommand extends Command
             }
 
             $this->logProcessorService->process($filePath);
+
+            $this->cache->clear();
 
             $output->write('Process logs executed successfully');
         } catch (Throwable $throwable) {

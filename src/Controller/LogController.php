@@ -34,19 +34,18 @@ final class LogController extends AbstractController
         $page = max(1, (int) $request->query->get('page', 1));
         $limit = max(1, (int) $request->query->get('limit', 10));
 
-        $logs = $this->logRepository->getPaginatedLogs($page, $limit);
-
         return $this->json([
             'page' => $page,
             'limit' => $limit,
-            'total' => $logs['total'],
-            'data' => $logs['data'],
+            'total' => $this->logRepository->getTotalLogsCount(),
+            'data' => $this->logRepository->getPaginatedLogs($page, $limit),
         ]);
     }
 
     #[Route('/logs', name: 'app_log_delete', methods: ['DELETE'])]
     public function truncate(): JsonResponse {
         $this->logRepository->deleteAll();
+        $this->logRepository->clearCache();
 
         return $this->json([], Response::HTTP_NO_CONTENT);
     }

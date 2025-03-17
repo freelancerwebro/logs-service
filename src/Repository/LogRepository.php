@@ -9,7 +9,10 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * @extends ServiceEntityRepository<Log>
@@ -23,52 +26,64 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
 {
     private const CACHE_LIFETIME = 3600;
     private Connection $conn;
+    private CacheInterface $cache;
 
-    public function __construct(ManagerRegistry $registry, Connection $conn)
+    public function __construct(ManagerRegistry $registry, Connection $conn, CacheInterface $cache)
     {
         parent::__construct($registry, Log::class);
         $this->conn = $conn;
+        $this->cache = $cache;
     }
 
     public function countByCriteria(?LogRequestDto $logRequestDto = null): int
     {
-        $qb = $this->createQueryBuilder('l');
-        $qb = $qb
-            ->select('count(l.id)')
-            ->where('1 = 1');
+        $cacheKey = $this->generateCacheKey($logRequestDto);
 
-        if (!empty($logRequestDto->serviceNames)) {
-            $qb->andWhere($qb->expr()->in('l.serviceName', ':serviceNames'))
-                ->setParameter('serviceNames', $logRequestDto->serviceNames);
-        }
+        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($logRequestDto) {
+            $item->expiresAfter(self::CACHE_LIFETIME);
 
-        if (!empty($logRequestDto->statusCode)) {
-            $qb->andWhere('l.statusCode = :statusCode')
-                ->setParameter('statusCode', $logRequestDto->statusCode);
-        }
+            $qb = $this->createQueryBuilder('l');
+            $qb = $qb
+                ->select('count(l.id)')
+                ->where('1 = 1');
 
-        if (!empty($logRequestDto->statusCode)) {
-            $qb->andWhere('l.statusCode = :statusCode')
-                ->setParameter('statusCode', $logRequestDto->statusCode);
-        }
+            if (!empty($logRequestDto->serviceNames)) {
+                $qb->andWhere($qb->expr()->in('l.serviceName', ':serviceNames'))
+                    ->setParameter('serviceNames', $logRequestDto->serviceNames);
+            }
 
-        if (!empty($logRequestDto->startDate)) {
-            $qb->andWhere('l.created >= :startDate')
-                ->setParameter('startDate', $logRequestDto->startDate);
-        }
+            if (!empty($logRequestDto->statusCode)) {
+                $qb->andWhere('l.statusCode = :statusCode')
+                    ->setParameter('statusCode', $logRequestDto->statusCode);
+            }
 
-        if (!empty($logRequestDto->endDate)) {
-            $qb->andWhere('l.created <= :endDate')
-                ->setParameter('endDate', $logRequestDto->endDate);
-        }
+            if (!empty($logRequestDto->statusCode)) {
+                $qb->andWhere('l.statusCode = :statusCode')
+                    ->setParameter('statusCode', $logRequestDto->statusCode);
+            }
 
-        $result = $qb
-            ->getQuery()
-            ->useQueryCache(true)
-            ->setQueryCacheLifetime(self::CACHE_LIFETIME)
-            ->getSingleScalarResult();
+            if (!empty($logRequestDto->startDate)) {
+                $qb->andWhere('l.created >= :startDate')
+                    ->setParameter('startDate', $logRequestDto->startDate);
+            }
 
-        return (int) $result;
+            if (!empty($logRequestDto->endDate)) {
+                $qb->andWhere('l.created <= :endDate')
+                    ->setParameter('endDate', $logRequestDto->endDate);
+            }
+
+            return (int)$qb->getQuery()->getSingleScalarResult();
+        });
+    }
+
+    private function generateCacheKey(?LogRequestDto $logRequestDto): string
+    {
+        return 'logs_count_' . md5(json_encode([
+                'serviceNames' => $logRequestDto->serviceNames ?? '',
+                'statusCode' => $logRequestDto->statusCode ?? '',
+                'startDate' => $logRequestDto->startDate ?? '',
+                'endDate' => $logRequestDto->endDate ?? ''
+            ]));
     }
 
     public function deleteAll(): int
@@ -85,6 +100,11 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
         $this->getEntityManager()->flush();
     }
 
+    public function clearCache(): void
+    {
+        $this->cache->clear();
+    }
+
     public function flushBulkInsert(array $logBuffer): void
     {
         if (empty($logBuffer)) {
@@ -99,27 +119,37 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
         }
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function getTotalLogsCount(): int
+    {
+        return $this->cache->get('total_logs_count', function (ItemInterface $item) {
+            $item->expiresAfter(self::CACHE_LIFETIME); // Cache for 1 hour
+
+            return (int) $this->createQueryBuilder('l')
+                ->select('COUNT(l.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
+        });
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
     public function getPaginatedLogs(int $page, int $limit): array
     {
-        $query = $this->createQueryBuilder('l')
-            ->orderBy('l.created', 'DESC')
-            ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit)
-            ->getQuery();
+        return $this->cache->get("logs_page_{$page}_limit_{$limit}", function (ItemInterface $item) use ($page, $limit) {
+            $item->expiresAfter(self::CACHE_LIFETIME);
 
-        $paginator = new Paginator($query);
-        $totalLogs = count($paginator);
+            $query = $this->createQueryBuilder('l')
+                ->select('l.id, l.serviceName, l.statusCode, l.endpoint, l.method, l.created')
+                ->orderBy('l.created', 'DESC')
+                ->setFirstResult(($page - 1) * $limit)
+                ->setMaxResults($limit)
+                ->getQuery();
 
-        return [
-            'total' => $totalLogs,
-            'data' => array_map(fn ($log) => [
-                'id' => $log->getId(),
-                'service_name' => $log->getServiceName(),
-                'method' => $log->getMethod(),
-                'endpoint' => $log->getEndpoint(),
-                'status_code' => $log->getStatusCode(),
-                'created' => $log->getCreated()->format('Y-m-d H:i:s'),
-            ], $paginator->getIterator()->getArrayCopy()),
-        ];
+            return $query->getResult();
+        });
     }
 }
