@@ -83,7 +83,7 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
             return self::CACHE_LOGS_COUNT_KEY;
         }
 
-        return 'logs_count_' . md5(json_encode([
+        return self::CACHE_LOGS_COUNT_KEY . '_' . md5(json_encode([
                 'serviceNames' => $logRequestDto->serviceNames ?? '',
                 'statusCode' => $logRequestDto->statusCode ?? '',
                 'startDate' => $logRequestDto->startDate ?? '',
