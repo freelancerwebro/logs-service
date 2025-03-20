@@ -11,7 +11,7 @@ interface LogRepositoryInterface
 {
     public function countByCriteria(?LogRequestDto $logRequestDto = null): int;
 
-    public function deleteAll(): int;
+    public function deleteAll(): void;
 
     public function save(Log $log): void;
 

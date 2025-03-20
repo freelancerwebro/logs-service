@@ -91,12 +91,13 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
             ]));
     }
 
-    public function deleteAll(): int
+    public function deleteAll(): void
     {
-        $qb = $this->createQueryBuilder('l');
-        $qb->delete();
+        $platform = $this->conn->getDatabasePlatform();
 
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        $this->conn->executeStatement('SET FOREIGN_KEY_CHECKS=0');
+        $this->conn->executeStatement($platform->getTruncateTableSQL('log', true));
+        $this->conn->executeStatement('SET FOREIGN_KEY_CHECKS=1');
     }
 
     public function save(Log $log): void
