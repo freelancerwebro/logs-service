@@ -78,4 +78,9 @@ readonly class LogProcessorService
             $lineArray['method'] . "', '" . addslashes($lineArray['endpoint']) . "', '".
             (int)$lineArray['statusCode'] . "', '" . $created . "')";
     }
+
+    public function refreshLogsCount(): void
+    {
+        $this->logRepository->refreshLogsCount();
+    }
 }
