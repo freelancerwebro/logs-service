@@ -24,6 +24,9 @@ use Symfony\Contracts\Cache\ItemInterface;
 class LogRepository extends ServiceEntityRepository implements LogRepositoryInterface
 {
     private const CACHE_LIFETIME = 3600;
+    private const CACHE_LAST_PROCESSED_LINE_KEY = 'last_processed_line';
+    private const CACHE_TOTAL_LOGS_COUNT_KEY = 'total_logs_count';
+
     private Connection $conn;
     private CacheInterface $cache;
 
@@ -123,7 +126,7 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
      */
     public function getTotalLogsCount(): int
     {
-        return $this->cache->get('total_logs_count', function (ItemInterface $item) {
+        return $this->cache->get(self::CACHE_TOTAL_LOGS_COUNT_KEY, function (ItemInterface $item) {
             $item->expiresAfter(self::CACHE_LIFETIME); // Cache for 1 hour
 
             return (int) $this->createQueryBuilder('l')
@@ -157,7 +160,7 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
      */
     public function getLastProcessedLine(): int
     {
-        return (int) $this->cache->get('last_processed_line', fn() => 0);
+        return (int) $this->cache->get(self::CACHE_LAST_PROCESSED_LINE_KEY, fn() => 0);
     }
 
     /**
@@ -165,7 +168,7 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
      */
     public function saveLastProcessedLine(int $lineNumber): void
     {
-        $this->cache->delete('last_processed_line');
-        $this->cache->get('last_processed_line', fn() => $lineNumber);
+        $this->cache->delete(self::CACHE_LAST_PROCESSED_LINE_KEY);
+        $this->cache->get(self::CACHE_LAST_PROCESSED_LINE_KEY, fn() => $lineNumber);
     }
 }
