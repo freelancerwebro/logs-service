@@ -83,4 +83,44 @@ readonly class LogProcessorService
     {
         $this->logRepository->refreshLogsCount();
     }
+
+    /**
+     * @throws Exception
+     */
+    public function processLiveLogs(string $filePath): void
+    {
+        $handle = popen("tail -F " . escapeshellarg($filePath), "r");
+
+        if (!$handle) {
+            throw new \Exception("Failed to open file: $filePath");
+        }
+
+        $logBuffer = [];
+
+        while (!feof($handle)) {
+            $line = fgets($handle);
+            if (!$line) {
+                usleep(100000);
+                continue;
+            }
+
+            $lineArray = $this->parser->parseLine($line);
+            if (!$lineArray) {
+                continue;
+            }
+
+            $logBuffer[] = $this->getSQLInsertString($lineArray);
+
+            if (count($logBuffer) >= self::BATCH_SIZE) {
+                $this->logRepository->flushBulkInsert($logBuffer);
+                $logBuffer = [];
+            }
+        }
+
+        if (!empty($logBuffer)) {
+            $this->logRepository->flushBulkInsert($logBuffer);
+        }
+
+        pclose($handle);
+    }
 }
