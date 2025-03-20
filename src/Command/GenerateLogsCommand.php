@@ -40,7 +40,7 @@ class GenerateLogsCommand extends Command
         $generateRowsNo = $input->getArgument('generateRowsNo');
 
         try {
-            for ($i = 0; $i <= $generateRowsNo; ++$i) {
+            for ($i = 0; $i < $generateRowsNo; ++$i) {
                 $serviceName = self::SERVICE_NAMES[array_rand(self::SERVICE_NAMES)];
                 $method = self::METHODS[array_rand(self::METHODS)];
                 $code = self::CODES[array_rand(self::CODES)];

@@ -29,11 +29,15 @@ final class ProcessLogsCommand extends Command
     {
         $this
             ->setDescription('Process the aggregated log file')
-            ->addArgument('filePath', InputArgument::REQUIRED, 'Path to the log file');
+            ->addArgument('filePath', InputArgument::REQUIRED, 'Path to the log file')
+            ->addArgument('startLine', InputArgument::REQUIRED, 'Start line number')
+            ->addArgument('endLine', InputArgument::REQUIRED, 'End line number');
     }
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $filePath = $input->getArgument('filePath');
+        $startLine = (int) $input->getArgument('startLine');
+        $endLine = (int) $input->getArgument('endLine');
 
         try {
             if (!is_readable($filePath)) {
@@ -41,13 +45,14 @@ final class ProcessLogsCommand extends Command
                 return Command::FAILURE;
             }
 
-            $this->logProcessorService->process($filePath);
+            //$this->cache->clear();
 
-            $this->cache->clear();
+            $this->logProcessorService->process($filePath, $startLine, $endLine);
 
-            $output->write('Process logs executed successfully');
+            $output->writeln("Processed lines $startLine - $endLine");
+            $output->writeln("\r\n");
         } catch (Throwable $throwable) {
-            $output->write($throwable->getMessage());
+            $output->writeln($throwable->getMessage());
 
             return Command::FAILURE;
         }

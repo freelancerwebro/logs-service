@@ -17,4 +17,7 @@ interface LogRepositoryInterface
 
     public function flushBulkInsert(array $logBuffer): void;
     public function getPaginatedLogs(int $page, int $limit): array;
+
+    public function getLastProcessedLine(): int;
+    public function saveLastProcessedLine(int $lineNumber): void;
 }

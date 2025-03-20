@@ -152,4 +152,21 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
             return $query->getResult();
         });
     }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function getLastProcessedLine(): int
+    {
+        return (int) $this->cache->get('last_processed_line', fn() => 0);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function saveLastProcessedLine(int $lineNumber): void
+    {
+        $this->cache->delete('last_processed_line');
+        $this->cache->get('last_processed_line', fn() => $lineNumber);
+    }
 }

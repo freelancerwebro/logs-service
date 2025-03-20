@@ -11,6 +11,7 @@ use Exception;
 
 readonly class LogProcessorService
 {
+    const BATCH_SIZE = 1000;
     public function __construct(
         private LineParserInterface $parser,
         private LogRepositoryInterface $logRepository
@@ -20,17 +21,32 @@ readonly class LogProcessorService
     /**
      * @throws Exception
      */
-    public function process(string $filePath): void
+    public function process(string $filePath, int $startLine, int $endLine): void
     {
         $handle = fopen($filePath, "r");
         if (!$handle) {
             throw new Exception("Failed to open file: $filePath");
         }
 
-        $batchSize = 1000;
+        $lastProcessedLine = $this->logRepository->getLastProcessedLine();
+
+        if ($lastProcessedLine >= $startLine) {
+            $startLine = $lastProcessedLine + 1;
+        }
+        $currentLine = 0;
         $logBuffer = [];
 
         while (($line = fgets($handle)) !== false) {
+            $currentLine++;
+
+            if ($currentLine < $startLine) {
+                continue; // Skip lines already processed
+            }
+
+            if ($currentLine > $endLine) {
+                break; // Stop at the defined range
+            }
+            
             $lineArray = $this->parser->parseLine($line);
             if (!$lineArray) {
                 continue;
@@ -38,14 +54,16 @@ readonly class LogProcessorService
 
             $logBuffer[] = $this->getSQLInsertString($lineArray);
 
-            if (count($logBuffer) >= $batchSize) {
+            if (count($logBuffer) >= self::BATCH_SIZE) {
                 $this->logRepository->flushBulkInsert($logBuffer);
+                $this->logRepository->saveLastProcessedLine($currentLine);
                 $logBuffer = [];
             }
         }
 
         if (!empty($logBuffer)) {
             $this->logRepository->flushBulkInsert($logBuffer);
+            $this->logRepository->saveLastProcessedLine($currentLine);
         }
 
         fclose($handle);
