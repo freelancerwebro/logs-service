@@ -25,7 +25,7 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
 {
     private const CACHE_LIFETIME = 3600;
     private const CACHE_LAST_PROCESSED_LINE_KEY = 'last_processed_line';
-    private const CACHE_TOTAL_LOGS_COUNT_KEY = 'total_logs_count';
+    private const CACHE_LOGS_COUNT_KEY = 'logs_count';
 
     private Connection $conn;
     private CacheInterface $cache;
@@ -80,6 +80,14 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
 
     private function generateCacheKey(?LogRequestDto $logRequestDto): string
     {
+        if (empty($logRequestDto->serviceNames) &&
+            empty($logRequestDto->statusCode) &&
+            empty($logRequestDto->startDate) &&
+            empty($logRequestDto->endDate)
+        ) {
+            return self::CACHE_LOGS_COUNT_KEY;
+        }
+
         return 'logs_count_' . md5(json_encode([
                 'serviceNames' => $logRequestDto->serviceNames ?? '',
                 'statusCode' => $logRequestDto->statusCode ?? '',
@@ -126,14 +134,29 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
      */
     public function getTotalLogsCount(): int
     {
-        return $this->cache->get(self::CACHE_TOTAL_LOGS_COUNT_KEY, function (ItemInterface $item) {
+        return $this->cache->get(self::CACHE_LOGS_COUNT_KEY, function (ItemInterface $item) {
             $item->expiresAfter(self::CACHE_LIFETIME); // Cache for 1 hour
 
-            return (int) $this->createQueryBuilder('l')
-                ->select('COUNT(l.id)')
-                ->getQuery()
-                ->getSingleScalarResult();
+            return $this->calculateLogsCount();
         });
+    }
+
+    public function calculateLogsCount(): int
+    {
+        return (int) $this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function refreshLogsCount(): void
+    {
+        $this->cache->delete(self::CACHE_LOGS_COUNT_KEY);
+
+        $this->getTotalLogsCount();
     }
 
     /**
