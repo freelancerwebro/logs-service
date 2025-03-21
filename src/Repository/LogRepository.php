@@ -95,9 +95,7 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
     {
         $platform = $this->conn->getDatabasePlatform();
 
-        $this->conn->executeStatement('SET FOREIGN_KEY_CHECKS=0');
         $this->conn->executeStatement($platform->getTruncateTableSQL('log', true));
-        $this->conn->executeStatement('SET FOREIGN_KEY_CHECKS=1');
     }
 
     public function save(Log $log): void
