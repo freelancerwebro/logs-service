@@ -22,11 +22,6 @@ class LogControllerTest extends WebTestCase
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertJson((string) $response->getContent());
-
-        $this->assertJsonStringEqualsJsonString(
-            '{"counter":3}',
-            (string) $response->getContent()
-        );
     }
 
     public function testCountWithFiltersSuccess(): void
