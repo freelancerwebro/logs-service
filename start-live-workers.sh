@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOG_FILE="/var/log/test.log"
+LOG_FILE="/var/log/aggregated.log"
 
 while true; do
     echo "Starting live log processing..."

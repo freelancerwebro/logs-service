@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LOG_FILE="/var/log/test.log"
+LOG_FILE="/var/log/aggregated.log"
 TOTAL_LINES=$(wc -l < "$LOG_FILE")
-CHUNK_SIZE=100000
+CHUNK_SIZE=1000000
 START=1
 echo 'Total lines: ' $TOTAL_LINES ' Chunk size: ' $CHUNK_SIZE ' Start: ' $START
 
