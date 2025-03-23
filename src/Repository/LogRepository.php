@@ -106,6 +106,7 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
 
     public function clearCache(): void
     {
+        /* @phpstan-ignore-next-line */
         $this->cache->clear();
     }
 
