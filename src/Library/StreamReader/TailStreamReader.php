@@ -10,7 +10,7 @@ class TailStreamReader implements StreamReaderInterface
 
     public function open(string $filePath): void
     {
-        $this->handle = popen("tail -F " . escapeshellarg($filePath), "r");
+        $this->handle = popen("tail -F " . escapeshellarg($filePath) . " 2>/dev/null", "r");
 
         if (!$this->handle) {
             throw new \RuntimeException("Failed to open stream: $filePath");

@@ -8,7 +8,7 @@ use App\Library\LogParser\LineParserInterface;
 use App\Library\StreamReader\StreamReaderInterface;
 use App\Repository\LogRepositoryInterface;
 
-readonly class LogBatchProcessorService extends LogProcessorAbstract
+readonly class LogBatchProcessorService extends LogProcessorAbstract implements LogRefresherInterface, LogProcessorInterface
 {
     public function __construct(
         private LineParserInterface $parser,

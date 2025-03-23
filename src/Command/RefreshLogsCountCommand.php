@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\LogBatchProcessorService;
+use App\Service\LogRefresherInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -15,7 +15,7 @@ use Throwable;
 class RefreshLogsCountCommand extends Command
 {
     public function __construct(
-        private readonly LogBatchProcessorService $logProcessorService
+        private readonly LogRefresherInterface $logProcessor
     ) {
         parent::__construct();
     }
@@ -23,7 +23,7 @@ class RefreshLogsCountCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $this->logProcessorService->refreshLogsCount();
+            $this->logProcessor->refreshLogsCount();
             $output->writeln('Logs count refreshed in cache.');
             return Command::SUCCESS;
         } catch (Throwable $throwable) {

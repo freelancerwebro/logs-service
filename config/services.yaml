@@ -43,3 +43,5 @@ services:
     App\Service\LogLiveProcessorService:
         arguments:
             $tailStreamReader: '@App\Library\StreamReader\TailStreamReader'
+
+    App\Service\LogProcessorInterface: '@App\Service\LogBatchProcessorService'

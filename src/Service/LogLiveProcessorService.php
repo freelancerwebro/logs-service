@@ -8,7 +8,7 @@ use App\Library\LogParser\LineParserInterface;
 use App\Library\StreamReader\StreamReaderInterface;
 use App\Repository\LogRepositoryInterface;
 
-readonly class LogLiveProcessorService extends LogProcessorAbstract
+readonly class LogLiveProcessorService extends LogProcessorAbstract implements LogProcessorInterface
 {
     public function __construct(
         private LineParserInterface $parser,
@@ -22,10 +22,6 @@ readonly class LogLiveProcessorService extends LogProcessorAbstract
         $logBuffer = [];
 
         while ($line = $this->tailStreamReader->getNextLine()) {
-            if (!$line) {
-                usleep(100000); // simulate waiting
-                continue;
-            }
 
             $lineArray = $this->parser->parseLine($line);
             if (!$lineArray) {
