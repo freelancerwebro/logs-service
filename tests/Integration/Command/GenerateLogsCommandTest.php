@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Command;
 
+use App\Command\GenerateLogsCommand;
+use Exception;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use App\Command\GenerateLogsCommand;
 
 class GenerateLogsCommandTest extends KernelTestCase
 {
@@ -14,7 +16,7 @@ class GenerateLogsCommandTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        $this->logFile = sys_get_temp_dir() . '/test_log.log';
+        $this->logFile = sys_get_temp_dir().'/test_log.log';
         if (file_exists($this->logFile)) {
             unlink($this->logFile);
         }
@@ -48,11 +50,11 @@ class GenerateLogsCommandTest extends KernelTestCase
     public function testFailsIfLogEntryIsEmpty(): void
     {
         $command = new GenerateLogsCommand();
-        $reflection = new \ReflectionClass($command);
+        $reflection = new ReflectionClass($command);
         $method = $reflection->getMethod('writeIntoFile');
         $method->setAccessible(true);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Log entry is empty');
 
         $method->invoke($command, '', $this->logFile);

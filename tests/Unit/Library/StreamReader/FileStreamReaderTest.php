@@ -6,7 +6,11 @@ namespace App\Tests\Unit\Library\StreamReader;
 
 use App\Library\StreamReader\FileStreamReader;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
+/**
+ * @SuppressWarnings("ErrorControlOperator")
+ */
 class FileStreamReaderTest extends TestCase
 {
     private string $tempFile;
@@ -19,14 +23,17 @@ class FileStreamReaderTest extends TestCase
 
     protected function tearDown(): void
     {
-        @unlink($this->tempFile);
+        if (file_exists($this->tempFile)) {
+            unlink($this->tempFile);
+        }
     }
 
     public function testOpenThrowsExceptionOnInvalidPath(): void
     {
         $reader = new FileStreamReader();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
+
         @$reader->open('/nonexistent/file/path.log');
     }
 

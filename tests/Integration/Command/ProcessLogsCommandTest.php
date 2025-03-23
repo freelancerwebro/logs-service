@@ -7,8 +7,9 @@ namespace App\Tests\Integration\Command;
 use App\Command\ProcessLogsCommand;
 use App\Service\LogProcessorInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class ProcessLogsCommandTest extends TestCase
 {
@@ -16,7 +17,7 @@ class ProcessLogsCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tempFile = sys_get_temp_dir() . '/test_log.log';
+        $this->tempFile = sys_get_temp_dir().'/test_log.log';
         file_put_contents($this->tempFile, "line 1\nline 2\nline 3\n");
     }
 
@@ -69,7 +70,7 @@ class ProcessLogsCommandTest extends TestCase
         $mockProcessor = $this->createMock(LogProcessorInterface::class);
         $mockProcessor->expects($this->once())
             ->method('process')
-            ->willThrowException(new \RuntimeException('Simulated failure'));
+            ->willThrowException(new RuntimeException('Simulated failure'));
 
         $command = new ProcessLogsCommand($mockProcessor);
         $tester = new CommandTester($command);

@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class LogController extends AbstractController
 {
     public function __construct(
-        private readonly LogRepository $logRepository
+        private readonly LogRepository $logRepository,
     ) {
     }
 
@@ -29,7 +29,7 @@ final class LogController extends AbstractController
 
     #[Route('/logs', name: 'app_log_list', methods: ['GET'])]
     public function list(
-        Request $request
+        Request $request,
     ): JsonResponse {
         $page = max(1, (int) $request->query->get('page', 1));
         $limit = max(1, (int) $request->query->get('limit', 10));
@@ -43,7 +43,8 @@ final class LogController extends AbstractController
     }
 
     #[Route('/logs', name: 'app_log_delete', methods: ['DELETE'])]
-    public function truncate(): JsonResponse {
+    public function truncate(): JsonResponse
+    {
         $this->logRepository->deleteAll();
         $this->logRepository->clearCache();
 

@@ -69,26 +69,26 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
                     ->setParameter('endDate', $logRequestDto->endDate);
             }
 
-            return (int)$qb->getQuery()->getSingleScalarResult();
+            return (int) $qb->getQuery()->getSingleScalarResult();
         });
     }
 
     private function generateCacheKey(?LogRequestDto $logRequestDto): string
     {
-        if (empty($logRequestDto->serviceNames) &&
-            empty($logRequestDto->statusCode) &&
-            empty($logRequestDto->startDate) &&
-            empty($logRequestDto->endDate)
+        if (empty($logRequestDto->serviceNames)
+            && empty($logRequestDto->statusCode)
+            && empty($logRequestDto->startDate)
+            && empty($logRequestDto->endDate)
         ) {
             return self::CACHE_LOGS_COUNT_KEY;
         }
 
-        return self::CACHE_LOGS_COUNT_KEY . '_' . md5(json_encode([
-                'serviceNames' => $logRequestDto->serviceNames ?? '',
-                'statusCode' => $logRequestDto->statusCode ?? '',
-                'startDate' => $logRequestDto->startDate ?? '',
-                'endDate' => $logRequestDto->endDate ?? ''
-            ]));
+        return self::CACHE_LOGS_COUNT_KEY.'_'.md5(json_encode([
+            'serviceNames' => $logRequestDto->serviceNames ?? '',
+            'statusCode' => $logRequestDto->statusCode ?? '',
+            'startDate' => $logRequestDto->startDate ?? '',
+            'endDate' => $logRequestDto->endDate ?? '',
+        ]));
     }
 
     public function deleteAll(): void
@@ -116,10 +116,10 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
         }
 
         try {
-            $sql = "INSERT IGNORE INTO log (service_name, method, endpoint, status_code, created) VALUES " . implode(", ", $logBuffer);
+            $sql = 'INSERT IGNORE INTO log (service_name, method, endpoint, status_code, created) VALUES '.implode(', ', $logBuffer);
             $this->conn->executeStatement($sql);
         } catch (Exception $e) {
-            throw new RuntimeException('Failed to insert logs: ' . $e->getMessage());
+            throw new RuntimeException('Failed to insert logs: '.$e->getMessage());
         }
     }
 
@@ -177,7 +177,7 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
      */
     public function getLastProcessedLine(): int
     {
-        return (int) $this->cache->get(self::CACHE_LAST_PROCESSED_LINE_KEY, fn() => 0);
+        return (int) $this->cache->get(self::CACHE_LAST_PROCESSED_LINE_KEY, fn () => 0);
     }
 
     /**
@@ -186,6 +186,6 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
     public function saveLastProcessedLine(int $lineNumber): void
     {
         $this->cache->delete(self::CACHE_LAST_PROCESSED_LINE_KEY);
-        $this->cache->get(self::CACHE_LAST_PROCESSED_LINE_KEY, fn() => $lineNumber);
+        $this->cache->get(self::CACHE_LAST_PROCESSED_LINE_KEY, fn () => $lineNumber);
     }
 }

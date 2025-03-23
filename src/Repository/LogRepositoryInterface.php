@@ -16,10 +16,12 @@ interface LogRepositoryInterface
     public function save(Log $log): void;
 
     public function flushBulkInsert(array $logBuffer): void;
+
     public function getPaginatedLogs(int $page, int $limit): array;
 
     public function refreshLogsCount(): void;
 
     public function getLastProcessedLine(): int;
+
     public function saveLastProcessedLine(int $lineNumber): void;
 }

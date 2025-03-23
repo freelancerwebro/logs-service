@@ -6,8 +6,8 @@ namespace App\Tests\Unit\Service;
 
 use App\Library\LogParser\LineParserInterface;
 use App\Library\StreamReader\StreamReaderInterface;
-use App\Service\LogLiveProcessorService;
 use App\Repository\LogRepositoryInterface;
+use App\Service\LogLiveProcessorService;
 use PHPUnit\Framework\TestCase;
 
 class LogLiveProcessorServiceTest extends TestCase
@@ -30,14 +30,14 @@ class LogLiveProcessorServiceTest extends TestCase
                 'method' => 'GET',
                 'endpoint' => '/test',
                 'statusCode' => 200,
-                'created' => '14/Mar/2025:22:43:01 +0000'
+                'created' => '14/Mar/2025:22:43:01 +0000',
             ]);
 
         $repository->expects($this->once())
             ->method('flushBulkInsert')
             ->with($this->callback(function ($buffer) {
                 return is_array($buffer)
-                    && count($buffer) === 1
+                    && 1 === count($buffer)
                     && str_contains($buffer[0], "'AUTH-SERVICE'")
                     && str_contains($buffer[0], "'/test'")
                     && str_contains($buffer[0], "'200'")
@@ -66,12 +66,12 @@ class LogLiveProcessorServiceTest extends TestCase
                 'method' => 'POST',
                 'endpoint' => '/create',
                 'statusCode' => 201,
-                'created' => '14/Mar/2025:22:43:01 +0000'
+                'created' => '14/Mar/2025:22:43:01 +0000',
             ]);
 
         $repository->expects($this->once())
             ->method('flushBulkInsert')
-            ->with($this->callback(fn ($items) => count($items) === 1));
+            ->with($this->callback(fn ($items) => 1 === count($items)));
 
         $service = new LogLiveProcessorService($parser, $repository, $reader);
         $service->process('/some/file.log');

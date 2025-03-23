@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Library\StreamReader;
 
+use RuntimeException;
+
 class FileStreamReader implements StreamReaderInterface
 {
     private mixed $handle = null;
@@ -13,7 +15,7 @@ class FileStreamReader implements StreamReaderInterface
         $this->handle = fopen($filePath, 'r');
 
         if (!$this->handle || !is_resource($this->handle)) {
-            throw new \RuntimeException("Failed to open file: $filePath");
+            throw new RuntimeException("Failed to open file: $filePath");
         }
     }
 
@@ -24,7 +26,8 @@ class FileStreamReader implements StreamReaderInterface
         }
 
         $line = fgets($this->handle);
-        return $line !== false ? $line : null;
+
+        return false !== $line ? $line : null;
     }
 
     public function close(): void

@@ -30,7 +30,7 @@ readonly class LogBatchProcessorService extends LogProcessorAbstract implements 
         $logBuffer = [];
 
         while ($line = $this->fileStreamReader->getNextLine()) {
-            $currentLine++;
+            ++$currentLine;
 
             if ($currentLine < $startLine) {
                 continue; // Skip lines already processed

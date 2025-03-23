@@ -7,7 +7,7 @@ namespace App\Library\LogParser;
 final class Parser extends AbstractParser
 {
     public function __construct(
-        private readonly string $pattern
+        private readonly string $pattern,
     ) {
     }
 

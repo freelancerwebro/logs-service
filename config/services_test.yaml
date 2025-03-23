@@ -4,7 +4,7 @@ services:
         autoconfigure: true
 
     App\Tests\Behat\:
-        resource: '../tests/Behat/*'
+        resource: '../tests/Behavioral/*'
 
 doctrine:
     dbal:

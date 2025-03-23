@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Library\StreamReader;
 
+use RuntimeException;
+
 class TailStreamReader implements StreamReaderInterface
 {
     private mixed $handle = null;
 
     public function open(string $filePath): void
     {
-        $this->handle = popen("tail -F " . escapeshellarg($filePath) . " 2>/dev/null", "r");
+        $this->handle = popen('tail -F '.escapeshellarg($filePath).' 2>/dev/null', 'r');
 
         if (!$this->handle) {
-            throw new \RuntimeException("Failed to open stream: $filePath");
+            throw new RuntimeException("Failed to open stream: $filePath");
         }
     }
 
@@ -24,7 +26,8 @@ class TailStreamReader implements StreamReaderInterface
         }
 
         $line = fgets($this->handle);
-        return $line !== false ? $line : null;
+
+        return false !== $line ? $line : null;
     }
 
     public function close(): void

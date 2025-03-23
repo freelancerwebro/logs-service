@@ -16,13 +16,13 @@ readonly class LogLiveProcessorService extends LogProcessorAbstract implements L
         private StreamReaderInterface $tailStreamReader,
     ) {
     }
+
     public function process(string $filePath, int $startLine = 0, int $endLine = 0): void
     {
         $this->tailStreamReader->open($filePath);
         $logBuffer = [];
 
         while ($line = $this->tailStreamReader->getNextLine()) {
-
             $lineArray = $this->parser->parseLine($line);
             if (!$lineArray) {
                 continue;

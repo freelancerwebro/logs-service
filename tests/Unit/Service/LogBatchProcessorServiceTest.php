@@ -33,7 +33,7 @@ class LogBatchProcessorServiceTest extends TestCase
                 'method' => 'GET',
                 'endpoint' => '/test',
                 'statusCode' => 200,
-                'created' => '14/Mar/2025:22:43:01 +0000'
+                'created' => '14/Mar/2025:22:43:01 +0000',
             ],
             [],
             [
@@ -41,13 +41,13 @@ class LogBatchProcessorServiceTest extends TestCase
                 'method' => 'POST',
                 'endpoint' => '/login',
                 'statusCode' => 201,
-                'created' => '14/Mar/2025:22:45:00 +0000'
+                'created' => '14/Mar/2025:22:45:00 +0000',
             ]
         );
 
         $repository->expects($this->once())
             ->method('flushBulkInsert')
-            ->with($this->callback(fn ($items) => count($items) === 2));
+            ->with($this->callback(fn ($items) => 2 === count($items)));
 
         $repository->expects($this->once())
             ->method('saveLastProcessedLine')
@@ -74,12 +74,12 @@ class LogBatchProcessorServiceTest extends TestCase
             'method' => 'GET',
             'endpoint' => '/test',
             'statusCode' => 200,
-            'created' => '14/Mar/2025:22:43:01 +0000'
+            'created' => '14/Mar/2025:22:43:01 +0000',
         ]);
 
         $repository->expects($this->once())
             ->method('flushBulkInsert')
-            ->with($this->callback(fn ($items) => count($items) === 2)); // lines 3 and 4
+            ->with($this->callback(fn ($items) => 2 === count($items))); // lines 3 and 4
 
         $repository->expects($this->once())
             ->method('saveLastProcessedLine')->with(4);

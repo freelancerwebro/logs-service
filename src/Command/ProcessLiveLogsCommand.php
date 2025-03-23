@@ -19,7 +19,7 @@ use Throwable;
 class ProcessLiveLogsCommand extends Command
 {
     public function __construct(
-        private readonly LogProcessorInterface $logProcessorService
+        private readonly LogProcessorInterface $logProcessorService,
     ) {
         parent::__construct();
     }
@@ -37,6 +37,7 @@ class ProcessLiveLogsCommand extends Command
 
         if (!file_exists($filePath)) {
             $output->writeln("<error>Log file does not exist: $filePath</error>");
+
             return Command::FAILURE;
         }
 
@@ -45,6 +46,7 @@ class ProcessLiveLogsCommand extends Command
             $this->logProcessorService->process($filePath);
         } catch (Throwable $throwable) {
             $output->writeln($throwable->getMessage());
+
             return Command::FAILURE;
         }
 

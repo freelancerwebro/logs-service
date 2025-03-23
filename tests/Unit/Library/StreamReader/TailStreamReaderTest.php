@@ -19,7 +19,9 @@ class TailStreamReaderTest extends TestCase
 
     protected function tearDown(): void
     {
-        @unlink($this->tempFile);
+        if (file_exists($this->tempFile)) {
+            unlink($this->tempFile);
+        }
     }
 
     public function testGetNextLineReturnsLogLines(): void

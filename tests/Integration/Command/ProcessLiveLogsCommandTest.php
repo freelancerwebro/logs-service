@@ -7,6 +7,7 @@ namespace App\Tests\Integration\Command;
 use App\Command\ProcessLiveLogsCommand;
 use App\Service\LogProcessorInterface;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -22,7 +23,9 @@ class ProcessLiveLogsCommandTest extends TestCase
 
     protected function tearDown(): void
     {
-        @unlink($this->logFile);
+        if (file_exists($this->logFile)) {
+            unlink($this->logFile);
+        }
     }
 
     public function testCommandFailsIfLogFileDoesNotExist(): void
@@ -32,7 +35,7 @@ class ProcessLiveLogsCommandTest extends TestCase
         $tester = new CommandTester($command);
 
         $tester->execute([
-            'filePath' => '/nonexistent/log/path.log'
+            'filePath' => '/nonexistent/log/path.log',
         ]);
 
         $this->assertEquals(Command::FAILURE, $tester->getStatusCode());
@@ -50,7 +53,7 @@ class ProcessLiveLogsCommandTest extends TestCase
         $tester = new CommandTester($command);
 
         $statusCode = $tester->execute([
-            'filePath' => $this->logFile
+            'filePath' => $this->logFile,
         ]);
 
         $this->assertEquals(Command::SUCCESS, $statusCode);
@@ -60,13 +63,13 @@ class ProcessLiveLogsCommandTest extends TestCase
     public function testCommandHandlesException(): void
     {
         $mockService = $this->createMock(LogProcessorInterface::class);
-        $mockService->method('process')->willThrowException(new \RuntimeException('Simulated error'));
+        $mockService->method('process')->willThrowException(new RuntimeException('Simulated error'));
 
         $command = new ProcessLiveLogsCommand($mockService);
         $tester = new CommandTester($command);
 
         $statusCode = $tester->execute([
-            'filePath' => $this->logFile
+            'filePath' => $this->logFile,
         ]);
 
         $this->assertEquals(Command::FAILURE, $statusCode);

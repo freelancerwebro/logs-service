@@ -23,6 +23,7 @@ final class ProcessLogsCommand extends Command
     ) {
         parent::__construct();
     }
+
     protected function configure(): void
     {
         $this
@@ -31,6 +32,7 @@ final class ProcessLogsCommand extends Command
             ->addArgument('startLine', InputArgument::REQUIRED, 'Start line number')
             ->addArgument('endLine', InputArgument::REQUIRED, 'End line number');
     }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $filePath = $input->getArgument('filePath');
@@ -40,6 +42,7 @@ final class ProcessLogsCommand extends Command
         try {
             if (!is_readable($filePath)) {
                 $output->write('File not found or not readable');
+
                 return Command::FAILURE;
             }
 

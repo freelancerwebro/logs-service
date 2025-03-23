@@ -20,11 +20,11 @@ use Throwable;
 )]
 class GenerateLogsCommand extends Command
 {
-    const LOG_FORMAT = '%s - - [%s] "%s %s HTTP/1.1" %d';
-    const SERVICE_NAMES = ['USER-SERVICE', 'AUTH-SERVICE', 'NOTIFICATION-SERVICE', 'INVOICE-SERVICE', 'PAYMENT-SERVICE'];
-    const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
-    const CODES = [200, 201, 200, 201, 200, 201, 200, 201, 200, 201, 200, 201, 204, 400, 404, 500, 502, 503];
-    const ENDPOINTS = ['/auth', '/user', '/user/1', '/notify', '/invoice/2', '/payment/1/status'];
+    public const LOG_FORMAT = '%s - - [%s] "%s %s HTTP/1.1" %d';
+    public const SERVICE_NAMES = ['USER-SERVICE', 'AUTH-SERVICE', 'NOTIFICATION-SERVICE', 'INVOICE-SERVICE', 'PAYMENT-SERVICE'];
+    public const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
+    public const CODES = [200, 201, 200, 201, 200, 201, 200, 201, 200, 201, 200, 201, 204, 400, 404, 500, 502, 503];
+    public const ENDPOINTS = ['/auth', '/user', '/user/1', '/notify', '/invoice/2', '/payment/1/status'];
 
     protected function configure(): void
     {
@@ -45,9 +45,9 @@ class GenerateLogsCommand extends Command
                 $method = self::METHODS[array_rand(self::METHODS)];
                 $code = self::CODES[array_rand(self::CODES)];
                 $endpoint = self::ENDPOINTS[array_rand(self::ENDPOINTS)];
-                $timestamp = rand(strtotime("2020-01-01 00:00:00"), strtotime("2025-03-23 00:00:00"));
+                $timestamp = rand(strtotime('2020-01-01 00:00:00'), strtotime('2025-03-23 00:00:00'));
 
-                $logEntry = sprintf(self::LOG_FORMAT, $serviceName, date("d/M/Y:H:i:s O", $timestamp), $method, $endpoint, $code) . "\n";
+                $logEntry = sprintf(self::LOG_FORMAT, $serviceName, date('d/M/Y:H:i:s O', $timestamp), $method, $endpoint, $code)."\n";
                 $this->writeIntoFile($logEntry, $filePath);
             }
 
@@ -67,17 +67,17 @@ class GenerateLogsCommand extends Command
     private function writeIntoFile(string $logEntry, string $filePath): void
     {
         if (!is_writable($filePath) && !is_writable(dirname($filePath))) {
-            throw new Exception("Error: Cannot write to log file.");
+            throw new Exception('Error: Cannot write to log file.');
         }
 
         if (empty($logEntry)) {
-            throw new Exception("Error: Log entry is empty.");
+            throw new Exception('Error: Log entry is empty.');
         }
 
         $file = fopen($filePath, 'a');
 
         if (!$file) {
-            throw new Exception("Error: Unable to write to the log file.");
+            throw new Exception('Error: Unable to write to the log file.');
         }
 
         fwrite($file, $logEntry);
