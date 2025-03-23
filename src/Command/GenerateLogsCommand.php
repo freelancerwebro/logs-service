@@ -45,8 +45,9 @@ class GenerateLogsCommand extends Command
                 $method = self::METHODS[array_rand(self::METHODS)];
                 $code = self::CODES[array_rand(self::CODES)];
                 $endpoint = self::ENDPOINTS[array_rand(self::ENDPOINTS)];
+                $timestamp = rand(strtotime("2020-01-01 00:00:00"), strtotime("2025-03-23 00:00:00"));
 
-                $logEntry = sprintf(self::LOG_FORMAT, $serviceName, date('d/M/Y:H:i:s O'), $method, $endpoint, $code) . "\n";
+                $logEntry = sprintf(self::LOG_FORMAT, $serviceName, date("d/M/Y:H:i:s O", $timestamp), $method, $endpoint, $code) . "\n";
                 $this->writeIntoFile($logEntry, $filePath);
             }
 

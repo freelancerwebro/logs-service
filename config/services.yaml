@@ -30,3 +30,16 @@ services:
     App\Library\LogParser\Parser:
         arguments:
             $pattern: '/(?<serviceName>\S+)\s+-\s+-\s+\[(?<created>.+)\]\s+"(?<method>\S+)\s+(?<endpoint>\S+)\s+(?<http>[0-9A-Z\/.]+)"\s+(?<statusCode>\d+)/'
+
+    App\Library\StreamReader\FileStreamReader: ~
+    App\Library\StreamReader\TailStreamReader: ~
+
+    # Inject FileStreamReader into LogBatchProcessorService
+    App\Service\LogBatchProcessorService:
+        arguments:
+            $fileStreamReader: '@App\Library\StreamReader\FileStreamReader'
+
+    # Inject TailStreamReader into LogLiveProcessorService
+    App\Service\LogLiveProcessorService:
+        arguments:
+            $tailStreamReader: '@App\Library\StreamReader\TailStreamReader'

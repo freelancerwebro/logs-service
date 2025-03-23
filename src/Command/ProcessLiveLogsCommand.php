@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\LogProcessorService;
+use App\Service\LogLiveProcessorService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,7 +19,7 @@ use Throwable;
 class ProcessLiveLogsCommand extends Command
 {
     public function __construct(
-        private readonly LogProcessorService $logProcessorService
+        private readonly LogLiveProcessorService $logProcessorService
     ) {
         parent::__construct();
     }
@@ -42,7 +42,7 @@ class ProcessLiveLogsCommand extends Command
 
         try {
             $output->writeln("<info>Watching log file: $filePath</info>");
-            $this->logProcessorService->processLiveLogs($filePath);
+            $this->logProcessorService->process($filePath);
         } catch (Throwable $throwable) {
             $output->writeln($throwable->getMessage());
             return Command::FAILURE;

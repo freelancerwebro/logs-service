@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\LogProcessorService;
+use App\Service\LogBatchProcessorService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -15,7 +15,7 @@ use Throwable;
 class RefreshLogsCountCommand extends Command
 {
     public function __construct(
-        private readonly LogProcessorService $logProcessorService
+        private readonly LogBatchProcessorService $logProcessorService
     ) {
         parent::__construct();
     }
