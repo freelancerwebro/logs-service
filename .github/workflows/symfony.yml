@@ -50,4 +50,6 @@ jobs:
     - name: Execute code quality tools (phpstan, phpmd, cs-fixer)
       run: composer cs    
     - name: Execute tests (phpunit, behat)
+      env:
+        DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
       run: composer all_tests
