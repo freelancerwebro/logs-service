@@ -17,6 +17,7 @@ It supports background processing, Redis-based caching, chunked ingestion, and p
 - MySQL 8
 - Redis
 - Docker & Docker Compose
+- PHPUnit & Behat
 
 ## Requirements
 - [git](https://github.com/git-guides/install-git)
