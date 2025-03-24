@@ -49,8 +49,10 @@ jobs:
         touch data/database.sqlite
     - name: Execute code quality tools (phpstan, phpmd, cs-fixer)
       run: composer cs    
-    - name: Execute tests (phpunit, behat)
+    - name: Execute tests - phpunit
+      run: composer test
+    - name: Execute behavioral tests
       env:
         DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
         REDIS_URL: redis://redis:6379
-      run: composer test
+      run: composer behat
