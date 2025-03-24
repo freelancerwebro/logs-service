@@ -51,7 +51,7 @@ jobs:
       run: composer cs    
     - name: Execute tests - phpunit
       run: composer test
-    - name: Execute behavioral tests
+    - name: Execute tests - behat
       env:
         DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
         REDIS_URL: redis://redis:6379

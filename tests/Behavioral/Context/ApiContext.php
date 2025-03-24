@@ -87,6 +87,11 @@ class ApiContext implements Context
      */
     public function theResponseStatusCodeShouldBe(int $code): void
     {
+        $json = json_decode($this->client->getResponse()->getContent(), true);
+        var_dump($json);
+        var_dump($this->client->getResponse()->getStatusCode());
+        die;
+
         Assert::assertSame($code, $this->client->getResponse()->getStatusCode());
     }
 
