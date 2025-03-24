@@ -31,6 +31,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+    - name: Copy .env.test
+      run: php -r "file_exists('.env.test') || copy('.env.test.example', '.env.test');"
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v3
