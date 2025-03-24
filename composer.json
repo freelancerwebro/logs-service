@@ -75,7 +75,8 @@
         "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --show-progress=none",
         "cs": ["@cs-fix", "@phpstan", "@phpmd"],
         "test": "vendor/bin/phpunit",
-        "behat": "DATABASE_URL=sqlite:///%kernel.project_dir%/var/test.db REDIS_URL=redis://redis:6379 vendor/bin/behat"
+        "behat": "DATABASE_URL=sqlite:///%kernel.project_dir%/var/test.db REDIS_URL=redis://redis:6379 vendor/bin/behat",
+        "all_tests": ["@test", "behat"]
     },
     "conflict": {
         "symfony/symfony": "*"
