@@ -52,4 +52,5 @@ jobs:
     - name: Execute tests (phpunit, behat)
       env:
         DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
+        REDIS_URL: redis://redis:6379
       run: composer all_tests
