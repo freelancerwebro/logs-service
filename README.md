@@ -13,7 +13,7 @@ It supports background processing, Redis-based caching, chunked ingestion, and p
 ## 🛠 Tech Stack
 
 - PHP 8.4
-- Symfony 7.3
+- Symfony 7.2
 - MySQL 8
 - Redis
 - Docker & Docker Compose
