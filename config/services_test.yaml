@@ -1,11 +1,11 @@
 services:
     _defaults:
+        public: true
         autowire: true
         autoconfigure: true
 
-    App\Tests\Behat\:
+    App\Tests\Behavioral\:
         resource: '../tests/Behavioral/*'
-
 doctrine:
     dbal:
         connections:

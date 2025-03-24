@@ -1,3 +1,7 @@
 default:
+    suites:
+        default:
+            contexts:
+                - App\Tests\Behavioral\Context\ApiContext
     extensions:
         FriendsOfBehat\SymfonyExtension: null

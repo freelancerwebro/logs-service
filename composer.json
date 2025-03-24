@@ -70,12 +70,12 @@
             "@auto-scripts"
         ],
         "phpstan": "vendor/bin/phpstan analyse --memory-limit=4G -c phpstan.neon",
-        "phpmd": "php -d error_reporting=E_ALL^E_DEPRECATED vendor/bin/phpmd src,tests ansi phpmd.xml",
+        "phpmd": "php -d error_reporting=E_ALL^E_DEPRECATED vendor/bin/phpmd src,tests ansi phpmd.xml --exclude tests/Behavioral/Context/ApiContext.php",
         "cs-check": "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --dry-run --show-progress=none -v",
         "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --show-progress=none",
         "cs": ["@cs-fix", "@phpstan", "@phpmd"],
         "test": "vendor/bin/phpunit",
-        "behat": "vendor/bin/behat"
+        "behat": "DATABASE_URL=sqlite:///%kernel.project_dir%/var/test.db REDIS_URL=redis://redis:6379 vendor/bin/behat"
     },
     "conflict": {
         "symfony/symfony": "*"

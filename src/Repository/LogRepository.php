@@ -117,7 +117,7 @@ class LogRepository extends ServiceEntityRepository implements LogRepositoryInte
         }
 
         try {
-            $sql = 'INSERT IGNORE INTO log (service_name, method, endpoint, status_code, created) VALUES '.implode(', ', $logBuffer);
+            $sql = 'INSERT INTO log (service_name, method, endpoint, status_code, created) VALUES '.implode(', ', $logBuffer);
             $this->conn->executeStatement($sql);
         } catch (Exception $e) {
             throw new RuntimeException('Failed to insert logs: '.$e->getMessage());
