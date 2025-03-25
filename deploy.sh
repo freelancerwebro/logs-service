@@ -20,4 +20,4 @@ docker exec -it logs-service-php php bin/console doctrine:migrations:migrate --n
 docker exec -it logs-service-php php bin/console cache:clear --no-interaction
 
 echo 'Generate swagger documentation...'
-docker exec -it logs-service-php php bin/console api:openapi:export --format=json > swagger.json
+docker exec -it logs-service-php php bin/console nelmio:apidoc:dump --format=json > swagger.json
