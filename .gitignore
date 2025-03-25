@@ -76,3 +76,4 @@ var/test.db
 /.idea
 /undeploy.sh
 /swagger.json
+/public/bundles/
