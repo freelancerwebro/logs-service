@@ -76,3 +76,9 @@ or add this command to a Cron Job (Every 10 Min)
 ```
 */10 * * * * php /var/www/html/bin/console app:refresh-logs-count
 ```
+
+## 📖 API Documentation
+To explore the Swagger documentation, visit the following URL:
+```
+http://localhost:8081
+```
